@@ -1,0 +1,31 @@
+{
+  "name": "cell3d",
+  "version": "1.0.0",
+  "description": "Demo 3D cell image viewer",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/flyiniggle/cell3d.git"
+  },
+  "author": "Dan Thompson",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/flyiniggle/cell3d/issues"
+  },
+  "homepage": "https://github.com/flyiniggle/cell3d#readme",
+  "devDependencies": {
+    "nodemon": "2.0.20"
+  },
+  "dependencies": {
+    "canvas": "2.10.1",
+    "chalk": "5.1.2",
+    "express": "4.18.2",
+    "get-pixels": "^3.3.3",
+    "pixels": "^0.1.1"
+  }
+}
