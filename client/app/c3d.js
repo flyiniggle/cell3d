@@ -2,10 +2,14 @@
 // import {
 //   OrbitControls
 // } from 'https://unpkg.com/three@0.145.0/examples/jsm/controls/OrbitControls';
-import * as THREE from 'three';
-import {
-  OrbitControls
-} from 'three/examples/jsm/controls/OrbitControls';
+// import * as THREE from 'three';
+// import {
+//   OrbitControls
+// } from 'three/examples/jsm/controls/OrbitControls';
+import * as THREE from '/external/three/build/three.module.js'
+import { OrbitControls } from '/app/components/OrbitControls.js';
+import setVertexZPositions from '/app/lib/setVertexZPositions.js';
+
 
 export const loadImage = async () => {
   const response = await fetch('resources/zmap');
@@ -26,17 +30,10 @@ export default async function main(viewer) {
   const texture = new THREE.TextureLoader().load('images/_Phi8Color.png');
   const material = new THREE.MeshBasicMaterial({ map: texture });
   const positions = geometry.attributes.position.array;
-  const newPositions = []
+  const newPositions = setVertexZPositions(zMap, positions);
 
-  for (let i = 0; i < positions.length; i += 3) {
-      const v = new THREE.Vector3(positions[i], positions[i + 1], zMap[(i/3)])
-
-      newPositions.push(v.x);
-      newPositions.push(v.y);
-      newPositions.push(v.z / 15);
-  }
-  geometry.setAttribute( 'position', new THREE.BufferAttribute( new Float32Array(newPositions), 3 ) )
-  geometry.attributes.position.needsUpdate = true
+  geometry.setAttribute( 'position', newPositions );
+  geometry.attributes.position.needsUpdate = true;
 
   const mesh = new THREE.Mesh(geometry, material);
   scene.add(mesh);
@@ -44,33 +41,31 @@ export default async function main(viewer) {
   const renderer = new THREE.WebGLRenderer( { antialias: true } );
   renderer.setClearColor(0x555555 );
   renderer.setSize(viewer.offsetWidth, viewer.offsetHeight);
+  viewer.appendChild(renderer.domElement);
 
   const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 5000);
 
-  const controls = new OrbitControls(camera, renderer.domElement);
-
-  const geometry2 = new THREE.BoxGeometry( 1, 1, 1 );
-  const material2 = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-  const cube = new THREE.Mesh( geometry2, material2 );
-  scene.add( cube );
-
-  viewer.appendChild(renderer.domElement);
 
   camera.position.z = 1000;
 
+  const controls = new OrbitControls(camera, renderer.domElement);
+
   function animate() {
+
     requestAnimationFrame( animate );
 
-    mesh.rotation.x += 0.001;
-    mesh.rotation.y += 0.001;
+    controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
 
     renderer.render( scene, camera );
-  };
-  animate();
-  // mesh.rotation.x = .5;
-  // mesh.rotation.y = .1;
 
-  // renderer.render( scene, camera );
+  }
+  animate();
+
+  // mesh.rotation.x = -.2;
+  // mesh.rotation.y = -.2;
+  // mesh.rotation.z= .5;
+
+  // renderer.render(scene, camera);
 
   console.log('rendered')
 }

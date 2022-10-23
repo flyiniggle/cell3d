@@ -24,6 +24,7 @@ const expressApp = Express();
 expressApp.use(Express.json());
 expressApp.get('/', getIndex);
 expressApp.use('/app', Express.static(path.join(__dirname, 'client', 'app')))
+expressApp.use('/external', Express.static(path.join(__dirname, 'node_modules')))
 expressApp.get('/resources/zmap', getZMap);
 expressApp.use('/images', Express.static(path.join(__dirname, 'images')))
 
