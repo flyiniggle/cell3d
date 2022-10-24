@@ -1,5 +1,88 @@
+:root {
+  --loader-side: 35vh;
+  --loader-dot-side: calc(var(--loader-side) / 5);
+  --loader-dot-margin: calc(var(--loader-side) / 10);
+}
+
+#root {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
+}
+
 #viewer {
   width: 100vw;
   height: 100vh;
   position: fixed;
+  display: none;
+}
+
+.lds-grid {
+  display: flex;
+  width: var(--loader-side);
+  height: var(--loader-side);
+}
+
+.lds-grid div {
+  position: absolute;
+  width: var(--loader-dot-side);
+  height: var(--loader-dot-side);
+  border-radius: 50%;
+  background: red;
+  animation: lds-grid 1.2s linear infinite;
+}
+.lds-grid div:nth-child(1) {
+  top: var(--loader-dot-margin);
+  left: var(--loader-dot-margin);
+  animation-delay: 0s;
+}
+.lds-grid div:nth-child(2) {
+  top: var(--loader-dot-margin);
+  left: calc((var(--loader-dot-margin) * 2) + var(--loader-dot-side));
+  animation-delay: -0.4s;
+}
+.lds-grid div:nth-child(3) {
+  top: var(--loader-dot-margin);
+  left: calc((var(--loader-dot-margin) * 3) + (var(--loader-dot-side) * 2));
+  animation-delay: -0.8s;
+}
+.lds-grid div:nth-child(4) {
+  top: calc((var(--loader-dot-margin) * 2) + var(--loader-dot-side));
+  left: var(--loader-dot-margin);
+  animation-delay: -0.4s;
+}
+.lds-grid div:nth-child(5) {
+  top: calc((var(--loader-dot-margin) * 2) + var(--loader-dot-side));
+  left: calc((var(--loader-dot-margin) * 2) + var(--loader-dot-side));
+  animation-delay: -0.8s;
+}
+.lds-grid div:nth-child(6) {
+  top: calc((var(--loader-dot-margin) * 2) + var(--loader-dot-side));
+  left: calc((var(--loader-dot-margin) * 3) + (var(--loader-dot-side) * 2));
+  animation-delay: -1.2s;
+}
+.lds-grid div:nth-child(7) {
+  top: calc((var(--loader-dot-margin) * 3) + (var(--loader-dot-side) * 2));
+  left: var(--loader-dot-margin);
+  animation-delay: -0.8s;
+}
+.lds-grid div:nth-child(8) {
+  top: calc((var(--loader-dot-margin) * 3) + (var(--loader-dot-side) * 2));
+  left: calc((var(--loader-dot-margin) * 2) + var(--loader-dot-side));
+  animation-delay: -1.2s;
+}
+.lds-grid div:nth-child(9) {
+  top: calc((var(--loader-dot-margin) * 3) + (var(--loader-dot-side) * 2));
+  left: calc((var(--loader-dot-margin) * 3) + (var(--loader-dot-side) * 2));
+  animation-delay: -1.6s;
+}
+@keyframes lds-grid {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
 }
