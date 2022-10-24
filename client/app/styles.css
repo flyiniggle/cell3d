@@ -16,9 +16,14 @@
 
 #viewer {
   width: 100vw;
-  height: 100vh;
+  height: 0;
   position: fixed;
-  display: none;
+  opacity: 0;
+}
+
+#viewer.loaded {
+  height: 100vh;
+  opacity: 1;
 }
 
 .lds-grid {
@@ -88,4 +93,33 @@
   50% {
     opacity: 0.5;
   }
+}
+
+.toolbar {
+  margin: 30px;
+  padding: 10px 20px;
+  display: flex;
+  position: fixed;
+  border-bottom: 1px solid white;
+}
+
+.toolbar > Button {
+  height: 45px;
+  width: 150px;
+  border-radius: 7px;
+  border: none;
+  background: whte;
+  color: rgb(55, 71, 79);
+  text-transform: uppercase;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bold;
+}
+
+.toolbar > Button:last-child {
+  margin-left: 20px;
+}
+
+.toolbar > Button.selected {
+  color: white;
+  background: rgb(183, 28, 28);
 }

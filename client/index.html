@@ -17,7 +17,13 @@
     <div id="loader" >
       <div class="lds-grid"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
     </div>
-    <div id="viewer" />
+    <div id="viewer" >
+      <div class='toolbar'>
+        <Button class="selected" data-index=0>Full</Button>
+        <Button data-index=1>Time Series</Button>
+      </div>
+    </div>
+
   </div>
   <script type="module">
     import main from "/app/c3d.js";

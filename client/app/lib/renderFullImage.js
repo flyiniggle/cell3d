@@ -26,7 +26,7 @@ function renderFullImage(viewer, imageSpecs) {
   scene.add( light );
 
   const renderer = new THREE.WebGLRenderer( { antialias: true } );
-  renderer.setClearColor(0x555555 );
+  renderer.setClearColor(0x37474F );
   renderer.setSize(viewer.offsetWidth, viewer.offsetHeight);
   viewer.appendChild(renderer.domElement);
 
@@ -43,7 +43,6 @@ function renderFullImage(viewer, imageSpecs) {
   controls.maxAzimuthAngle = (Math.PI / 4);
 
   function animate() {
-    console.log(controls.getPolarAngle())
     requestAnimationFrame( animate );
 
     controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
@@ -52,7 +51,6 @@ function renderFullImage(viewer, imageSpecs) {
   }
 
   animate();
-  console.log('rendered')
 }
 
 
