@@ -10,6 +10,8 @@
   height: 100vh;
   align-items: center;
   justify-content: center;
+  align-content: space-around;
+  background: rgb(55, 71, 79);
 }
 
 #viewer {
@@ -20,7 +22,8 @@
 }
 
 .lds-grid {
-  display: flex;
+  display: inline-block;
+  position: relative;
   width: var(--loader-side);
   height: var(--loader-side);
 }
@@ -30,7 +33,7 @@
   width: var(--loader-dot-side);
   height: var(--loader-dot-side);
   border-radius: 50%;
-  background: red;
+  background: rgb(183, 28, 28);
   animation: lds-grid 1.2s linear infinite;
 }
 .lds-grid div:nth-child(1) {
