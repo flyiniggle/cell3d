@@ -53,6 +53,15 @@ class OrbitControls extends EventDispatcher {
 		this.minAzimuthAngle = - Infinity; // radians
 		this.maxAzimuthAngle = Infinity; // radians
 
+		this.minXPan = - Infinity; // radians
+		this.maxXPan = Infinity; // radians
+
+		this.minYPan = - Infinity; // radians
+		this.maxYPan = Infinity; // radians
+
+		this.minZPan = - Infinity; // radians
+		this.maxZPan = Infinity; // radians
+
 		// Set to true to enable damping (inertia)
 		// If damping is enabled, you must call controls.update() in your animation loop
 		this.enableDamping = false;
@@ -229,6 +238,9 @@ class OrbitControls extends EventDispatcher {
 
 				// move target to panned location
 
+				const minPan = new Vector3(scope.minXPan, scope.minYPan, scope.minZPan);
+				const maxPan = new Vector3(scope.maxXPan, scope.maxYPan, scope.maxZPan);
+
 				if ( scope.enableDamping === true ) {
 
 					scope.target.addScaledVector( panOffset, scope.dampingFactor );
@@ -238,6 +250,8 @@ class OrbitControls extends EventDispatcher {
 					scope.target.add( panOffset );
 
 				}
+
+				scope.target.clamp(minPan, maxPan);
 
 				offset.setFromSpherical( spherical );
 
