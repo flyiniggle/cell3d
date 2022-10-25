@@ -25,16 +25,19 @@ expressApp.use(Express.json());
 expressApp.get('/', getIndex);
 expressApp.use('/app', Express.static(path.join(__dirname, 'client', 'app')))
 expressApp.use('/external', Express.static(path.join(__dirname, 'node_modules')))
-expressApp.get('/resources/zmap', getZMap);
+expressApp.get('/resources/zmap/*', getZMap);
 expressApp.use('/images', Express.static(path.join(__dirname, 'images')))
+expressApp.use('/ca', Express.static(path.join(__dirname, 'images', 'results', 'derived')))
 
 function getIndex(req, res) {
   res.sendFile(path.join(__dirname, 'client', 'index.html'))
 }
 
 async function getZMap(req, res) {
-  const imageData = await getGreyscaleZMap(path.join(__dirname, 'images', '_Phi8.png'));
-  console.log(imageData)
+  const scanPath = req.params[0];
+  const imagePath = path.join(__dirname, 'images', 'results', 'derived', scanPath, '_Phi8.png');
+  const imageData = await getGreyscaleZMap(imagePath);
+
   res.json(imageData)
 }
 

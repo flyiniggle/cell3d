@@ -3,14 +3,14 @@ import { OrbitControls } from '/app/components/OrbitControls.js';
 import setVertexZPositions from '/app/lib/setVertexZPositions.js';
 
 
-function renderFullImage(viewer, imageSpecs) {
+function renderFullImage(viewer, scanPath, imageSpecs) {
   const {
     width,
     height,
     zMap
   } = imageSpecs
   const scene = new THREE.Scene();
-  const texture = new THREE.TextureLoader().load('images/_Phi8Color.png');
+  const texture = new THREE.TextureLoader().load(`ca/${scanPath}/_Phi8Color.png`);
   const material = new THREE.MeshPhongMaterial({ map: texture });
 
   const geometry = new THREE.PlaneGeometry(width, height, width - 1, height - 1);
@@ -41,6 +41,8 @@ function renderFullImage(viewer, imageSpecs) {
   controls.maxPolarAngle = Math.PI - .05;
   controls.minAzimuthAngle = (Math.PI * -.25);
   controls.maxAzimuthAngle = (Math.PI / 4);
+  controls.minZPan = 0;
+  controls.maxZPan = 2500;
 
   function animate() {
     requestAnimationFrame( animate );
