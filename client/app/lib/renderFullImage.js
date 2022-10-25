@@ -2,6 +2,7 @@ import * as THREE from '/external/three/build/three.module.js'
 import { OrbitControls } from '/app/components/OrbitControls.js';
 import setVertexZPositions from '/app/lib/setVertexZPositions.js';
 
+let animationID;
 
 function renderFullImage(viewer, scanPath, imageSpecs) {
   const {
@@ -44,16 +45,19 @@ function renderFullImage(viewer, scanPath, imageSpecs) {
   controls.minZPan = 0;
   controls.maxZPan = 2500;
 
+
   function animate() {
-    requestAnimationFrame( animate );
+    animationID = window.requestAnimationFrame( animate );
 
     controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
     renderer.render( scene, camera );
-
   }
 
   animate();
 }
 
+export const cancelAnimation = () => {
+  if(animationID) window.cancelAnimationFrame(animationID);
+};
 
 export default renderFullImage
