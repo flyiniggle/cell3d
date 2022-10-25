@@ -17,19 +17,17 @@
     <div id="loader" >
       <div class="lds-grid"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
     </div>
-    <div id="viewer" >
-      <div class='toolbar'>
-        <Button class="selected" data-index=0>Full</Button>
-        <Button data-index=1>Time Series</Button>
-      </div>
+    <div id="toolbar" class='toolbar'>
+      <Button class="selected" data-target='static'>Full</Button>
+      <Button data-target='timeseries'>Time Series</Button>
     </div>
-
+    <div id="staticViewer" class="viewer" />
+    <div id="timeSeriesViewer" class="viewer" />
   </div>
   <script type="module">
     import main from "/app/c3d.js";
   
-    const viewer = document.getElementById('viewer')
-    main(viewer);
+    main();
   </script>
 </body>
 </html>
