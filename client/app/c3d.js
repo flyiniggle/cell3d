@@ -3,7 +3,7 @@ import renderTimeSeries, { cancelAnimation as cancelTimeSeries } from '/app/lib/
 
 
 const C3D = (function() {
-  const well = 'C3';
+  const well = 'C4';
   const segment = '00_00';
 
   const loadStatic = async function() {

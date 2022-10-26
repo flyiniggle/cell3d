@@ -19,7 +19,7 @@ function renderFullImage(viewer, scanPath, imageSpecs) {
   const material = new THREE.MeshNormalMaterial({ 
     normalMap,
     displacementMap,
-    displacementScale: 30
+    displacementScale: 20
    });
 
   const geometry = new THREE.PlaneGeometry(width, height, width - 1, height - 1);
@@ -41,7 +41,7 @@ function renderFullImage(viewer, scanPath, imageSpecs) {
   viewer.appendChild(renderer.domElement);
 
   const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 5000);
-  camera.position.x = 1000;
+  camera.position.x = 0;
   camera.position.y = -2000;
   camera.position.z = 2000;
 

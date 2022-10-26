@@ -94,26 +94,28 @@
     opacity: 0.5;
   }
 }
-
 .toolbar {
-  margin: 30px;
-  padding: 10px 20px;
-  display: flex;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 2;
-  border-bottom: 1px solid white;
+	margin: 20px 30px;
+	padding: 15px 20px;
+	display: flex;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 2;
+	border-bottom: 2px solid rgba(183, 28, 28, .7);
+	background-color: rgba(0, 0, 0, .15);
+	border-radius: 7px;
 }
 
 .toolbar > Button {
-  height: 45px;
-  width: 150px;
-  border-radius: 7px;
+  height: 30px;
+  width: 100px;
+  border-radius: 5px;
   border: none;
   background: whte;
   color: rgb(55, 71, 79);
   text-transform: uppercase;
+  font-size: 12px;
   font-family: Arial, Helvetica, sans-serif;
   font-weight: bold;
 }
