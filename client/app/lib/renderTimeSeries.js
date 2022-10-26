@@ -1,8 +1,10 @@
 import * as THREE from '/external/three/build/three.module.js'
 import { OrbitControls } from '/app/components/OrbitControls.js';
+import Clock from '/app/lib/clock.js';
 
 
 let animationID;
+let clock;
 
 function renderTimeSeries(viewer, scanPath, specs) {
   const {
@@ -10,8 +12,8 @@ function renderTimeSeries(viewer, scanPath, specs) {
     width,
     height
   } = specs;
-
   const scene = new THREE.Scene();
+  clock = new Clock(scanFolders.length, .5);
 
   // Array<[nomralMap, displacementMap]>
   const maps = scanFolders.map(dir => {
@@ -57,14 +59,14 @@ function renderTimeSeries(viewer, scanPath, specs) {
   function animate() {
     animationID = window.requestAnimationFrame( animate );
 
-    const tick = Math.floor(animationID / 10);
-    const frame = tick % materials.length;
+    const frame = clock.getFrame();
 
     mesh.material = materials[frame];
     controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
     renderer.render( scene, camera );
   }
 
+  clock.start()
   animate();
 
 }
@@ -72,5 +74,9 @@ function renderTimeSeries(viewer, scanPath, specs) {
 export const cancelAnimation = () => {
   if(animationID) window.cancelAnimationFrame(animationID);
 };
+
+export const stop = () => clock.stop();
+
+export const start = () => clock.start();
 
 export default renderTimeSeries

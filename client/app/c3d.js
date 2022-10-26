@@ -1,21 +1,13 @@
-import renderFullImage, { cancelAnimation as cancelFullImage } from '/app/lib/renderFullImage.js'
-import renderTimeSeries, { cancelAnimation as cancelTimeSeries } from '/app/lib/renderTimeSeries.js'
+import renderTimeSeries, { 
+  cancelAnimation,
+  start,
+  stop
+ } from '/app/lib/renderTimeSeries.js'
 
 
 const C3D = (function() {
   const well = 'C4';
   const segment = '00_00';
-
-  const loadStatic = async function() {
-    showLoader();
-    const viewer = document.getElementById('staticViewer');
-    const scanPath = `2022-09-21_16-24-57/${well}/${segment}`;
-    const response = await fetch(`resources/zmap/${scanPath}`);
-    const imageSpecs = await response.json();
-
-    showStatic();
-    renderFullImage(viewer, scanPath, imageSpecs);
-  };
 
   const loadTimeSeries = async function() {
     showLoader();
@@ -29,21 +21,13 @@ const C3D = (function() {
   }
 
   const showLoader = function() {
-    cancelFullImage();
-    cancelTimeSeries();
+    cancelAnimation();
     document.getElementById('loader').style.display = 'revert';
     document.getElementById('toolbar').style.display = 'none';
     document.querySelectorAll('.viewer').forEach(e => {
       e.classList.remove('loaded');
       e.querySelector('canvas')?.remove();
     });
-  };
-
-  const showStatic = function() {
-    document.getElementById('loader').style.display = 'none';
-    document.getElementById('toolbar').style.display = 'revert';
-    document.querySelectorAll('.viewer').forEach(e => e.classList.remove('loaded'));
-    document.getElementById('staticViewer').classList.add('loaded');
   };
 
   const showTimeSeries = function() {
@@ -53,7 +37,7 @@ const C3D = (function() {
     document.getElementById('timeSeriesViewer').classList.add('loaded');
   };
 
-  const toggleButtons = (event) => {
+  const togglePlay = (event) => {
     if(event.target.classList.contains('selected')) return; 
 
     document.querySelectorAll('.toolbar > Button').forEach(b => {
@@ -64,37 +48,34 @@ const C3D = (function() {
     const t = event.target.dataset.target;
     
     switch(t) {
-      case 'static': {
-        loadStatic();
+      case 'play': {
+        start();
         break;
       }
-      case 'timeseries': {
-        loadTimeSeries();
+      case 'pause': {
+        stop();
         break;
       }
       default: {
         () => undefined;
       }
     }
-
   };
 
   return {
-    loadStatic,
     loadTimeSeries,
     showLoader,
-    showStatic,
-    renderTimeseries: showTimeSeries,
-    toggleButtons,
+    showTimeSeries,
+    togglePlay,
   }
 })();
 
 
 export default async function main() {
   C3D.showLoader();
-  C3D.loadStatic();
+  C3D.loadTimeSeries();
 
   document.querySelectorAll('.toolbar > Button').forEach(b => {
-    b.addEventListener('click', C3D.toggleButtons);
+    b.addEventListener('click', C3D.togglePlay);
   });
 }
