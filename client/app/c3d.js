@@ -1,34 +1,36 @@
-import renderFullImage, { cancelAnimation } from '/app/lib/renderFullImage.js'
+import renderFullImage, { cancelAnimation as cancelFullImage } from '/app/lib/renderFullImage.js'
+import renderTimeSeries, { cancelAnimation as cancelTimeSeries } from '/app/lib/renderTimeSeries.js'
 
 
 const C3D = (function() {
-  const well = 'A1';
+  const well = 'C3';
   const segment = '00_00';
-  let animationID;
 
   const loadStatic = async function() {
-    renderLoader();
+    showLoader();
     const viewer = document.getElementById('staticViewer');
     const scanPath = `2022-09-21_16-24-57/${well}/${segment}`;
     const response = await fetch(`resources/zmap/${scanPath}`);
     const imageSpecs = await response.json();
 
-    renderStatic();
-    console.log(scanPath)
+    showStatic();
     renderFullImage(viewer, scanPath, imageSpecs);
   };
 
   const loadTimeSeries = async function() {
-    renderLoader();
+    showLoader();
+    const viewer = document.getElementById('timeSeriesViewer');
+    const scanPath = `${well}/${segment}`;
     const response = await fetch(`resources/timeseries/${well}/${segment}`);
-    const timeseries = await response.json();
+    const specs = await response.json();
 
-    renderTimeseries();
-    console.log(timeseries)
+    showTimeSeries();
+    renderTimeSeries(viewer, scanPath, specs);
   }
 
-  const renderLoader = function() {
-    cancelAnimation()
+  const showLoader = function() {
+    cancelFullImage();
+    cancelTimeSeries();
     document.getElementById('loader').style.display = 'revert';
     document.getElementById('toolbar').style.display = 'none';
     document.querySelectorAll('.viewer').forEach(e => {
@@ -37,14 +39,14 @@ const C3D = (function() {
     });
   };
 
-  const renderStatic = function() {
+  const showStatic = function() {
     document.getElementById('loader').style.display = 'none';
     document.getElementById('toolbar').style.display = 'revert';
     document.querySelectorAll('.viewer').forEach(e => e.classList.remove('loaded'));
     document.getElementById('staticViewer').classList.add('loaded');
   };
 
-  const renderTimeseries = function() {
+  const showTimeSeries = function() {
     document.getElementById('loader').style.display = 'none';
     document.getElementById('toolbar').style.display = 'revert';
     document.querySelectorAll('.viewer').forEach(e => e.classList.remove('loaded'));
@@ -80,16 +82,16 @@ const C3D = (function() {
   return {
     loadStatic,
     loadTimeSeries,
-    renderLoader,
-    renderStatic,
-    renderTimeseries,
+    showLoader,
+    showStatic,
+    renderTimeseries: showTimeSeries,
     toggleButtons,
   }
 })();
 
 
 export default async function main() {
-  C3D.renderLoader();
+  C3D.showLoader();
   C3D.loadStatic();
 
   document.querySelectorAll('.toolbar > Button').forEach(b => {

@@ -1,35 +1,35 @@
 import * as THREE from '/external/three/build/three.module.js'
 import { OrbitControls } from '/app/components/OrbitControls.js';
-//import setVertexZPositions from '/app/lib/setVertexZPositions.js';
 
 
 let animationID;
 
-function renderFullImage(viewer, scanPath, imageSpecs) {
+function renderTimeSeries(viewer, scanPath, specs) {
   const {
+    scanFolders,
     width,
-    height,
-    zMap
-  } = imageSpecs
+    height
+  } = specs;
+
   const scene = new THREE.Scene();
-  // const texture = new THREE.TextureLoader().load(`ca/${scanPath}/_Phi8Color.png`);
-  // const material = new THREE.MeshPhongMaterial({ map: texture });
-  const normalMap = new THREE.TextureLoader().load(`ca/${scanPath}/_Phi8Color.png`);
-  const displacementMap = new THREE.TextureLoader().load(`ca/${scanPath}/_Phi8.png`);
-  const material = new THREE.MeshNormalMaterial({ 
+
+  // Array<[nomralMap, displacementMap]>
+  const maps = scanFolders.map(dir => {
+    return [
+      new THREE.TextureLoader().load(`ca/${dir}/${scanPath}/_Phi8Color.png`),
+      new THREE.TextureLoader().load(`ca/${dir}/${scanPath}/_Phi8.png`)
+    ]
+  });
+  
+  const materials = maps.map(([normalMap, displacementMap]) => new THREE.MeshNormalMaterial({ 
     normalMap,
     displacementMap,
     displacementScale: 30
-   });
-
+   }));
+   
   const geometry = new THREE.PlaneGeometry(width, height, width - 1, height - 1);
-  // const positions = geometry.attributes.position.array;
-  // const newPositions = setVertexZPositions(zMap, positions);
-  // geometry.setAttribute( 'position', newPositions );
-  // geometry.attributes.position.needsUpdate = true;
 
-
-  const mesh = new THREE.Mesh(geometry, material);
+  const mesh = new THREE.Mesh(geometry, materials[0]);
   scene.add(mesh);
 
   const light = new THREE.AmbientLight( 0xffffff );
@@ -45,7 +45,6 @@ function renderFullImage(viewer, scanPath, imageSpecs) {
   camera.position.y = -2000;
   camera.position.z = 2000;
 
-
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.minPolarAngle = (Math.PI / 2);
   controls.maxPolarAngle = Math.PI - .05;
@@ -58,15 +57,20 @@ function renderFullImage(viewer, scanPath, imageSpecs) {
   function animate() {
     animationID = window.requestAnimationFrame( animate );
 
+    const tick = Math.floor(animationID / 10);
+    const frame = tick % materials.length;
+
+    mesh.material = materials[frame];
     controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
     renderer.render( scene, camera );
   }
 
   animate();
+
 }
 
 export const cancelAnimation = () => {
   if(animationID) window.cancelAnimationFrame(animationID);
 };
 
-export default renderFullImage
+export default renderTimeSeries
