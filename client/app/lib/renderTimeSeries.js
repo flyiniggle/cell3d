@@ -45,7 +45,7 @@ async function renderTimeSeries(viewer, scanPath, specs, progressBar) {
 
   const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 5000);
   camera.position.x = 0;
-  camera.position.y = -2000;
+  camera.position.y = -1000;
   camera.position.z = 2000;
 
   const controls = new OrbitControls(camera, renderer.domElement);

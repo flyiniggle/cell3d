@@ -40,7 +40,7 @@ const C3D = (function() {
 
   const showTimeSeries = function() {
     document.getElementById('loader').style.display = 'none';
-    document.getElementById('controls').style.display = 'revert';
+    document.getElementById('controls').style.display = 'flex';
     document.querySelectorAll('.viewer').forEach(e => e.classList.remove('loaded'));
     document.getElementById('timeSeriesViewer').classList.add('loaded');
   };
@@ -85,7 +85,6 @@ const C3D = (function() {
 
 
 export default async function main() {
-
   document.querySelectorAll('.buttons > Button').forEach(b => {
     const handler = b.dataset.target === 'play' ? C3D.play : C3D.pause;
 
