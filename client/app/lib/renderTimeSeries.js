@@ -6,11 +6,11 @@ import Clock from '/app/lib/clock.js';
 let animationID;
 let clock;
 
-function renderTimeSeries(viewer, scanPath, specs) {
+function renderTimeSeries(viewer, scanPath, specs, progressBar) {
   const {
     scanFolders,
     width,
-    height
+    height,
   } = specs;
   const scene = new THREE.Scene();
   clock = new Clock(scanFolders.length, .5);
@@ -60,13 +60,16 @@ function renderTimeSeries(viewer, scanPath, specs) {
     animationID = window.requestAnimationFrame( animate );
 
     const frame = clock.getFrame();
+    const progress = clock.getProgress();
+
+    progressBar.value = progress;
+    progressBar.style.backgroundSize = (progress - progressBar.min) * 100 / (progressBar.max - progressBar.min) + '% 100%';
 
     mesh.material = materials[frame];
     controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
     renderer.render( scene, camera );
   }
 
-  clock.start()
   animate();
 
 }

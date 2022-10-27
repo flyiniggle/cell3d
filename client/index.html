@@ -17,10 +17,15 @@
     <div id="loader" >
       <div class="lds-grid"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
     </div>
-    <div id="toolbar" class='toolbar'>
-      <Button class="selected" data-target='play'>play</Button>
-      <Button data-target='pause'>pause</Button>
-    </div>
+    <div id="controls" class="controls">
+      <div class="progressContainer">
+        <input type="range" min="0" step=".001" value="0" id="progress">
+      </div>
+      <div class='buttons'>
+        <Button data-target='play'>play</Button>
+        <Button class="selected" data-target='pause'>pause</Button>
+      </div>
+  </div>
     <div id="timeSeriesViewer" class="viewer" /></div>
   </div>
   <script type="module">
