@@ -21,10 +21,11 @@ const C3D = (function() {
     progressBar.max = frameCount - 1;
     progressBar.addEventListener('input', (e) => {
       set(e.target.value) 
-    })
+    });
 
+    const resize = await renderTimeSeries(viewer, scanPath, specs, progressBar);
     showTimeSeries();
-    renderTimeSeries(viewer, scanPath, specs, progressBar);
+    resize();
   }
 
   const showLoader = function() {

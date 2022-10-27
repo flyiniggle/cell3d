@@ -1,12 +1,13 @@
 import * as THREE from '/external/three/build/three.module.js'
 import { OrbitControls } from '/app/components/OrbitControls.js';
 import Clock from '/app/lib/clock.js';
+import loadTexture from '/app/lib/loadTexture.js';
 
 
 let animationID;
 let clock;
 
-function renderTimeSeries(viewer, scanPath, specs, progressBar) {
+async function renderTimeSeries(viewer, scanPath, specs, progressBar) {
   const {
     scanFolders,
     width,
@@ -16,19 +17,19 @@ function renderTimeSeries(viewer, scanPath, specs, progressBar) {
   clock = new Clock(scanFolders.length, .5);
 
   // Array<[nomralMap, displacementMap]>
-  const maps = scanFolders.map(dir => {
-    return [
-      new THREE.TextureLoader().load(`ca/${dir}/${scanPath}/_Phi8Color.png`),
-      new THREE.TextureLoader().load(`ca/${dir}/${scanPath}/_Phi8.png`)
-    ]
-  });
+  const maps = await Promise.all(scanFolders.map(dir => {
+    return Promise.all([
+      loadTexture(`ca/${dir}/${scanPath}/_Phi8Color.png`),
+      loadTexture(`ca/${dir}/${scanPath}/_Phi8.png`)
+    ]);
+  }));
   
   const materials = maps.map(([normalMap, displacementMap]) => new THREE.MeshNormalMaterial({ 
     normalMap,
     displacementMap,
     displacementScale: 20
-   }));
-   
+  }));
+
   const geometry = new THREE.PlaneGeometry(width, height, width - 1, height - 1);
 
   const mesh = new THREE.Mesh(geometry, materials[0]);
@@ -55,7 +56,6 @@ function renderTimeSeries(viewer, scanPath, specs, progressBar) {
   controls.minZPan = 0;
   controls.maxZPan = 2500;
 
-
   function animate() {
     animationID = window.requestAnimationFrame( animate );
 
@@ -70,8 +70,17 @@ function renderTimeSeries(viewer, scanPath, specs, progressBar) {
     renderer.render( scene, camera );
   }
 
+  function resize() {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  }
+
   animate();
 
+  window.addEventListener('resize', resize, false);
+
+  return resize;
 }
 
 export const cancelAnimation = () => {
