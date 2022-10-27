@@ -4,6 +4,7 @@ import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import Express from 'express';
 import Chalk from 'chalk';
+import serveFavicon from 'serve-favicon';
 import getZMap from './lib/getZMap.js';
 import getTimeSeries from './lib/getTimeseries.js';
 
@@ -23,6 +24,7 @@ process.on('unhandledRejection', error => {
 const expressApp = Express();
 
 expressApp.use(Express.json());
+expressApp.use(serveFavicon(path.join(__dirname, 'favicon.ico')));
 expressApp.get('/', getIndex);
 expressApp.use('/app', Express.static(path.join(__dirname, 'client', 'app')));
 expressApp.use('/external', Express.static(path.join(__dirname, 'node_modules')));
