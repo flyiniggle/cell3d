@@ -20,7 +20,12 @@ function Clock(frames, fps=1) {
     this.totalElapsedTime += this.getDelta();
 
     return (this.totalElapsedTime / fps) % frames;
+  };
 
+  this.setFrame = (f) => {
+    const newTime = f * fps;
+
+    this.totalElapsedTime = newTime;
   }
 }
 

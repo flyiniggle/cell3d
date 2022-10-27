@@ -1,7 +1,8 @@
 import renderTimeSeries, { 
   cancelAnimation,
+  set,
   start,
-  stop
+  stop,
  } from '/app/lib/renderTimeSeries.js'
 
 
@@ -18,7 +19,9 @@ const C3D = (function() {
     const frameCount = specs.scanFolders.length;
     
     progressBar.max = frameCount - 1;
-    progressBar.addEventListener('input', (e) => {console.log(e.target.value)})
+    progressBar.addEventListener('input', (e) => {
+      set(e.target.value) 
+    })
 
     showTimeSeries();
     renderTimeSeries(viewer, scanPath, specs, progressBar);
@@ -27,7 +30,7 @@ const C3D = (function() {
   const showLoader = function() {
     cancelAnimation();
     document.getElementById('loader').style.display = 'revert';
-    //document.getElementById('controls').style.display = 'none';
+    document.getElementById('controls').style.display = 'none';
     document.querySelectorAll('.viewer').forEach(e => {
       e.classList.remove('loaded');
       e.querySelector('canvas')?.remove();
@@ -36,7 +39,7 @@ const C3D = (function() {
 
   const showTimeSeries = function() {
     document.getElementById('loader').style.display = 'none';
-    //document.getElementById('controls').style.display = 'revert';
+    document.getElementById('controls').style.display = 'revert';
     document.querySelectorAll('.viewer').forEach(e => e.classList.remove('loaded'));
     document.getElementById('timeSeriesViewer').classList.add('loaded');
   };

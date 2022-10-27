@@ -82,4 +82,9 @@ export const stop = () => clock.stop();
 
 export const start = () => clock.start();
 
+export const set = (frame) => {
+  clock.stop();
+  clock.setFrame(frame);
+}
+
 export default renderTimeSeries
