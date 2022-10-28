@@ -4,16 +4,18 @@ import Clock from '/app/lib/clock.js';
 import loadTexture from '/app/lib/loadTexture.js';
 
 
+let progressBar;
 let animationID;
 let clock;
 
-async function renderTimeSeries(viewer, scanPath, specs, progressBar) {
+async function renderTimeSeries(viewer, scanPath, specs) {
   const {
     scanFolders,
     width,
     height,
   } = specs;
   const scene = new THREE.Scene();
+  
   clock = new Clock(scanFolders.length, .5);
 
   // Array<[nomralMap, displacementMap]>
@@ -35,10 +37,10 @@ async function renderTimeSeries(viewer, scanPath, specs, progressBar) {
   const mesh = new THREE.Mesh(geometry, materials[0]);
   scene.add(mesh);
 
-  const light = new THREE.AmbientLight( 0xffffff );
-  scene.add( light );
+  const light = new THREE.AmbientLight(0xffffff);
+  scene.add(light);
 
-  const renderer = new THREE.WebGLRenderer( { antialias: true } );
+  const renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setClearColor(0x37474F );
   renderer.setSize(viewer.offsetWidth, viewer.offsetHeight);
   viewer.appendChild(renderer.domElement);
@@ -57,7 +59,7 @@ async function renderTimeSeries(viewer, scanPath, specs, progressBar) {
   controls.maxZPan = 2500;
 
   function animate() {
-    animationID = window.requestAnimationFrame( animate );
+    animationID = window.requestAnimationFrame(animate);
 
     const frame = clock.getFrame();
     const progress = clock.getProgress();
@@ -70,17 +72,21 @@ async function renderTimeSeries(viewer, scanPath, specs, progressBar) {
     renderer.render( scene, camera );
   }
 
+  function startAnimation(p) {
+    progressBar = p;
+    animate();
+  }
+
   function resize() {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
   }
 
-  animate();
-
-  window.addEventListener('resize', resize, false);
-
-  return resize;
+  return {
+    resize,
+    startAnimation,
+  }
 }
 
 export const cancelAnimation = () => {

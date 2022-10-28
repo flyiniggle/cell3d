@@ -5,7 +5,6 @@ import { fileURLToPath } from 'url';
 import Express from 'express';
 import Chalk from 'chalk';
 import serveFavicon from 'serve-favicon';
-import getZMap from './lib/getZMap.js';
 import getTimeSeries from './lib/getTimeseries.js';
 
 
@@ -28,9 +27,8 @@ expressApp.use(serveFavicon(path.join(__dirname, 'favicon.ico')));
 expressApp.get('/', getIndex);
 expressApp.use('/app', Express.static(path.join(__dirname, 'client', 'app')));
 expressApp.use('/external', Express.static(path.join(__dirname, 'node_modules')));
-expressApp.get('/resources/zmap/*', getZMap);
 expressApp.use('/images', Express.static(path.join(__dirname, 'images')));
-expressApp.use('/ca', Express.static(path.join(__dirname, 'images', 'results', 'derived')));
+expressApp.use('/ca', Express.static(path.join(__dirname, 'images', 'ca', 'derived')));
 expressApp.get('/resources/timeseries/:well/:segment', getTimeSeries);
 
 function getIndex(req, res) {

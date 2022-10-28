@@ -96,7 +96,7 @@
 }
 
 .controls {
-  display: flex;
+  display: none;
   align-items: center;
   align-content: space-between;
   justify-content: center;

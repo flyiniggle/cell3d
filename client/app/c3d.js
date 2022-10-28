@@ -9,6 +9,16 @@ import renderTimeSeries, {
 const C3D = (function() {
   const well = 'C4';
   const segment = '00_00';
+  
+  const showLoader = function() {
+    cancelAnimation();
+    document.getElementById('loader').style.display = 'revert';
+    document.getElementById('controls').style.display = 'none';
+    document.querySelectorAll('.viewer').forEach(e => {
+      e.classList.remove('loaded');
+      e.querySelector('canvas')?.remove();
+    });
+  };
 
   const loadTimeSeries = async function(progressBar) {
     showLoader();
@@ -20,22 +30,17 @@ const C3D = (function() {
     
     progressBar.max = frameCount - 1;
     progressBar.addEventListener('input', (e) => {
-      set(e.target.value) 
+      document.querySelector('[data-target="play"]').classList.remove('selected');
+      document.querySelector('[data-target="pause"]').classList.add('selected');
+      set(e.target.value);
     });
 
-    const resize = await renderTimeSeries(viewer, scanPath, specs, progressBar);
+    const { resize, startAnimation } = await renderTimeSeries(viewer, scanPath, specs);
+
+    window.addEventListener('resize', resize, false);
+    startAnimation(progressBar);
     showTimeSeries();
     resize();
-  }
-
-  const showLoader = function() {
-    cancelAnimation();
-    document.getElementById('loader').style.display = 'revert';
-    document.getElementById('controls').style.display = 'none';
-    document.querySelectorAll('.viewer').forEach(e => {
-      e.classList.remove('loaded');
-      e.querySelector('canvas')?.remove();
-    });
   };
 
   const showTimeSeries = function() {
