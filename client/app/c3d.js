@@ -1,19 +1,19 @@
 import renderTimeSeries, { 
   cancelAnimation,
   set,
-  start,
-  stop,
+  play,
+  pause,
+  showBest,
+  showColor
  } from '/app/lib/renderTimeSeries.js'
 
 
 const C3D = (function() {
-  const well = 'C4';
-  const segment = '00_00';
-  
+
   const showLoader = function() {
     cancelAnimation();
     document.getElementById('loader').style.display = 'revert';
-    document.getElementById('controls').style.display = 'none';
+    document.querySelectorAll('.controls').forEach(e => e.style.display = 'none');
     document.querySelectorAll('.viewer').forEach(e => {
       e.classList.remove('loaded');
       e.querySelector('canvas')?.remove();
@@ -23,8 +23,7 @@ const C3D = (function() {
   const loadTimeSeries = async function(progressBar) {
     showLoader();
     const viewer = document.getElementById('timeSeriesViewer');
-    const scanPath = `${well}/${segment}`;
-    const response = await fetch(`resources/timeseries/${well}/${segment}`);
+    const response = await fetch(`resources/timeseries/best`);
     const specs = await response.json();
     const frameCount = specs.scanFolders.length;
     
@@ -35,7 +34,7 @@ const C3D = (function() {
       set(e.target.value);
     });
 
-    const { resize, startAnimation } = await renderTimeSeries(viewer, scanPath, specs);
+    const { resize, startAnimation } = await renderTimeSeries(viewer, specs);
 
     window.addEventListener('resize', resize, false);
     startAnimation(progressBar);
@@ -45,55 +44,44 @@ const C3D = (function() {
 
   const showTimeSeries = function() {
     document.getElementById('loader').style.display = 'none';
-    document.getElementById('controls').style.display = 'flex';
+    document.querySelectorAll('.controls').forEach(e => e.style.display = 'flex');
     document.querySelectorAll('.viewer').forEach(e => e.classList.remove('loaded'));
     document.getElementById('timeSeriesViewer').classList.add('loaded');
   };
 
-  const play = function(event) {
-    if(!!event) {
-      if(event.target.classList.contains('selected')) return;
+  const getToggleButtonHandler = (container) => {
+    return (event) => {
+      if(event.target.classList.contains('selected')) return; 
 
-      toggleButtons(event);
-    }
-
-    start();
+      container.querySelectorAll('Button').forEach(b => {
+        b.classList.remove('selected');
+      });
+      event.target.classList.add('selected');
+    };
   }
-
-  const pause = function(event) {
-    if(!!event) {
-      if(event.target.classList.contains('selected')) return;
-      
-      toggleButtons(event);
-    }
-
-    stop();
-  }
-
-  const toggleButtons = (event) => {
-    if(event.target.classList.contains('selected')) return; 
-
-    document.querySelectorAll('.buttons > Button').forEach(b => {
-      b.classList.remove('selected');
-    });
-    event.target.classList.add('selected');
-  };
 
   return {
+    getToggleButtonHandler,
     loadTimeSeries,
     showLoader,
-    showTimeSeries,
-    play,
-    pause,
+    showTimeSeries
   }
 })();
 
 
 export default async function main() {
-  document.querySelectorAll('.buttons > Button').forEach(b => {
-    const handler = b.dataset.target === 'play' ? C3D.play : C3D.pause;
+  const frameControlButtonHandler = C3D.getToggleButtonHandler(document.querySelector('.frameControlButtons'));
+  const overlayControlButtonHandler = C3D.getToggleButtonHandler(document.querySelector('.overlayControlButtons'));
+  const frameControlButtons = document.querySelectorAll('.frameControlButtons > Button');
+  const overlayControlButtons = document.querySelectorAll('.overlayControlButtons > Button');
 
-    b.addEventListener('click', handler);
+  frameControlButtons.forEach(b => {
+    b.addEventListener('click', frameControlButtonHandler);
+    b.addEventListener('click', b.dataset.target === 'play' ? play : pause);
+  });
+  overlayControlButtons.forEach(b => {
+    b.addEventListener('click', overlayControlButtonHandler);
+    b.addEventListener('click', b.dataset.target === 'color' ? showColor : showBest);
   });
 
   const progressBar = document.getElementById('progress');

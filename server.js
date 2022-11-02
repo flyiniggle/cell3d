@@ -6,6 +6,7 @@ import Express from 'express';
 import Chalk from 'chalk';
 import serveFavicon from 'serve-favicon';
 import getTimeSeries from './lib/getTimeseries.js';
+import getBestTimeSeries from './lib/getBestTimeseries.js';
 
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -29,7 +30,9 @@ expressApp.use('/app', Express.static(path.join(__dirname, 'client', 'app')));
 expressApp.use('/external', Express.static(path.join(__dirname, 'node_modules')));
 expressApp.use('/images', Express.static(path.join(__dirname, 'images')));
 expressApp.use('/ca', Express.static(path.join(__dirname, 'images', 'ca', 'derived')));
+expressApp.use('/best', Express.static(path.join(__dirname, 'images', 'ca', 'best')));
 expressApp.get('/resources/timeseries/:well/:segment', getTimeSeries);
+expressApp.get('/resources/timeseries/best', getBestTimeSeries);
 
 function getIndex(req, res) {
   res.sendFile(path.join(__dirname, 'client', 'index.html'))

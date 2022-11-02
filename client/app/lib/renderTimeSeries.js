@@ -7,8 +7,9 @@ import loadTexture from '/app/lib/loadTexture.js';
 let progressBar;
 let animationID;
 let clock;
+let overlay = 'color';
 
-async function renderTimeSeries(viewer, scanPath, specs) {
+async function renderTimeSeries(viewer, specs) {
   const {
     scanFolders,
     width,
@@ -16,25 +17,32 @@ async function renderTimeSeries(viewer, scanPath, specs) {
   } = specs;
   const scene = new THREE.Scene();
   
-  clock = new Clock(scanFolders.length, .5);
+  clock = new Clock(scanFolders.length, .25);
 
-  // Array<[nomralMap, displacementMap]>
+  // Array<[normalMap, normalMap, displacementMap]>
   const maps = await Promise.all(scanFolders.map(dir => {
     return Promise.all([
-      loadTexture(`ca/${dir}/${scanPath}/_Phi8Color.png`),
-      loadTexture(`ca/${dir}/${scanPath}/_Phi8.png`)
+      loadTexture(`best/${dir}/_Phi8Color.png`),
+      loadTexture(`best/${dir}/best.png`),
+      loadTexture(`best/${dir}/_Phi8.png`),
     ]);
   }));
   
-  const materials = maps.map(([normalMap, displacementMap]) => new THREE.MeshNormalMaterial({ 
-    normalMap,
+  const colorMaterials = maps.map(([map, , displacementMap]) => new THREE.MeshLambertMaterial({ 
+    map,
     displacementMap,
-    displacementScale: 20
+    displacementScale: 10
+  }));
+
+  const bestMaterials = maps.map(([ , map, displacementMap]) => new THREE.MeshLambertMaterial({ 
+    map,
+    displacementMap,
+    displacementScale: 10
   }));
 
   const geometry = new THREE.PlaneGeometry(width, height, width - 1, height - 1);
 
-  const mesh = new THREE.Mesh(geometry, materials[0]);
+  const mesh = new THREE.Mesh(geometry, colorMaterials[0]);
   scene.add(mesh);
 
   const light = new THREE.AmbientLight(0xffffff);
@@ -47,8 +55,8 @@ async function renderTimeSeries(viewer, scanPath, specs) {
 
   const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 5000);
   camera.position.x = 0;
-  camera.position.y = -1000;
-  camera.position.z = 2000;
+  camera.position.y = -250;
+  camera.position.z = 500;
 
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.minPolarAngle = (Math.PI / 2);
@@ -56,11 +64,12 @@ async function renderTimeSeries(viewer, scanPath, specs) {
   controls.minAzimuthAngle = (Math.PI * -.25);
   controls.maxAzimuthAngle = (Math.PI / 4);
   controls.minZPan = 0;
-  controls.maxZPan = 2500;
+  controls.maxZPan = 100;
 
   function animate() {
     animationID = window.requestAnimationFrame(animate);
 
+    const materials = overlay === 'best' ? bestMaterials : colorMaterials;
     const frame = clock.getFrame();
     const progress = clock.getProgress();
 
@@ -93,13 +102,21 @@ export const cancelAnimation = () => {
   if(animationID) window.cancelAnimationFrame(animationID);
 };
 
-export const stop = () => clock.stop();
+export const play = () => clock.start();
 
-export const start = () => clock.start();
+export const pause = () => clock.stop();
 
 export const set = (frame) => {
   clock.stop();
   clock.setFrame(frame);
+}
+
+export const showBest = () => {
+  overlay = 'best';
+}
+
+export const showColor = () => {
+  overlay = 'color';
 }
 
 export default renderTimeSeries

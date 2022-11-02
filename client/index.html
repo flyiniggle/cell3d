@@ -17,15 +17,22 @@
     <div id="loader" >
       <div class="lds-grid"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
     </div>
-    <div id="controls" class="controls">
-      <div class='buttons'>
+    <div class="controls frameControls">
+      <div class='frameControlButtons'>
         <Button data-target='play'>play</Button>
         <Button class="selected" data-target='pause'>pause</Button>
       </div>
       <div class="progressContainer">
         <input type="range" min="0" step=".001" value="0" id="progress">
       </div>
-  </div>
+    </div>
+    <div class="controls overlayControls">
+      <div class="label">Overlay</div>
+      <div class='overlayControlButtons'>
+        <Button class="selected" data-target='color'>color</Button>
+        <Button data-target='best'>best</Button>
+      </div>
+    </div>
     <div id="timeSeriesViewer" class="viewer" /></div>
   </div>
   <script type="module">
