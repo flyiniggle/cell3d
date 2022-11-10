@@ -74,12 +74,8 @@ export async function renderTimeSeries(viewer, specs) {
   const renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setClearColor(0x37474F );
   renderer.setSize(viewer.offsetWidth, viewer.offsetHeight);
-  viewer.appendChild(renderer.domElement);
 
   const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 5000);
-  camera.position.x = 0;
-  camera.position.y = -250;
-  camera.position.z = 200;
 
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.minPolarAngle = (Math.PI / 2);
@@ -91,7 +87,7 @@ export async function renderTimeSeries(viewer, specs) {
 
   function animate() {
     animationID = window.requestAnimationFrame(animate);
-
+    
     let materials = colorMaterials;
     switch(overlay) {
       case 'best':
@@ -131,9 +127,25 @@ export async function renderTimeSeries(viewer, specs) {
     renderer.setSize(window.innerWidth, window.innerHeight);
   }
 
+  function render() {
+    viewer.appendChild(renderer.domElement);
+    camera.position.x = 0;
+    camera.position.y = -250;
+    camera.position.z = 200;
+    clock.setFrame(0);
+  }
+
+  function tearDown() {
+    if(animationID) window.cancelAnimationFrame(animationID);
+    viewer.removeChild(renderer.domElement);
+    clock.stop();
+  }
+
   return {
+    render,
     resize,
     startAnimation,
+    tearDown,
   }
 }
 

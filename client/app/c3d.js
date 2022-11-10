@@ -3,13 +3,10 @@ import * as FullTimeSeries from '/app/lib/renderFullAlignedTimeSeries.js';
 
 
 const invokeViewer = new Event('invokeViewer');
+const tearDownViewer = new Event('tearDownViewer');
 
 const showLoader = function() {
   document.getElementById('loader').style.display = 'revert';
-  document.querySelectorAll('.viewer').forEach(e => {
-    e.classList.remove('loaded');
-    e.querySelector('canvas')?.remove();
-  });
 };
 
 const loadCloseTimeSeries = async function() {
@@ -17,12 +14,11 @@ const loadCloseTimeSeries = async function() {
   const response = await fetch(`resources/timeseries/aligned/small`);
   const specs = await response.json();
   const frameCount = specs.scans.length;
-  const { resize, startAnimation } = await SmallTimeSeries.renderTimeSeries(viewer, specs);
+  const animationControls = await SmallTimeSeries.renderTimeSeries(viewer, specs);
 
   return {
     frameCount,
-    resize,
-    startAnimation
+    ...animationControls
   }
 };
 
@@ -31,12 +27,11 @@ const loadFullTimeSeries = async function() {
   const response = await fetch(`resources/timeseries/aligned/full`);
   const specs = await response.json();
   const frameCount = specs.scans.length;
-  const { resize, startAnimation } = await FullTimeSeries.renderTimeSeries(viewer, specs);
+  const animationControls = await FullTimeSeries.renderTimeSeries(viewer, specs);
 
   return {
     frameCount,
-    resize,
-    startAnimation
+    ...animationControls
   }
 };
 
@@ -55,8 +50,10 @@ const setupContainer = ({
   container, 
   controller, 
   frameCount,
+  render,
   resize,
-  startAnimation
+  startAnimation,
+  tearDown,
 }) => {
   const frameControlButtonHandler = getToggleButtonHandler(container.querySelector('.frameControlButtons'));
   const overlayControlButtonHandler = getToggleButtonHandler(container.querySelector('.overlayControlButtons'));
@@ -80,12 +77,14 @@ const setupContainer = ({
 
   showFullViewButtons.forEach(b => {
     b.addEventListener('click', () => {
+      document.getElementById('smallContainer').dispatchEvent(tearDownViewer);
       document.getElementById('fullContainer').dispatchEvent(invokeViewer);
     });
   });
 
   showSmallViewButtons.forEach(b => {
     b.addEventListener('click', () => {
+      document.getElementById('fullContainer').dispatchEvent(tearDownViewer);
       document.getElementById('smallContainer').dispatchEvent(invokeViewer);
     });
   });
@@ -104,9 +103,22 @@ const setupContainer = ({
     document.getElementById('loader').style.display = 'none';
     container.classList.add('loaded');
 
+    render();
     startAnimation(progressBar);
     resize();
   });
+
+  container.addEventListener('tearDownViewer', () => {
+    container.querySelector('[data-target="play"]').classList.remove('selected');
+    container.querySelector('[data-target="pause"]').classList.add('selected');
+
+    overlayControlButtons.forEach(b => {
+      b.classList.remove('selected');
+    });
+    container.querySelector('.overlayControlButtons > Button[data-target="color"]').classList.add('selected');
+    controller.changeOverlay('color');
+    tearDown();
+  })
 }
 
 
@@ -122,6 +134,7 @@ export default async function main() {
       controller: SmallTimeSeries,
       ...r
     });
+    document.querySelectorAll('Button[data-target="small"]').forEach(b => b.disabled = false);
     smallContainer.dispatchEvent(invokeViewer);
   });
 
@@ -131,5 +144,6 @@ export default async function main() {
       controller: FullTimeSeries,
       ...r
     });
+    document.querySelectorAll('Button[data-target="full"]').forEach(b => b.disabled = false);
   });
 }
