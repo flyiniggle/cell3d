@@ -14,16 +14,28 @@
   background: rgb(55, 71, 79);
 }
 
-.viewer {
+.container {
+  display: none;
   width: 100vw;
-  height: 0;
-  position: fixed;
-  opacity: 0;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
+  align-content: space-around;
+  background: rgb(55, 71, 79);
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
 }
 
-.viewer.loaded {
+.container.loaded {
+  display: flex;
+}
+
+.viewer {
+  width: 100vw;
   height: 100vh;
-  opacity: 1;
+  position: fixed;
+  display: inherit;
 }
 
 .lds-grid {
@@ -96,7 +108,7 @@
 }
 
 .controls {
-  display: none;
+  display: flex;
   align-items: center;
   align-content: space-between;
   justify-content: center;
@@ -134,9 +146,21 @@
 .overlayControls {
   align-items: center;
   align-content: space-between;
+  justify-content: space-around;
 	top: 0;
 	right: 0;
-  width: 12vw;
+  width: 150px;
+  height: 250px;
+  flex-direction: column;
+}
+
+.viewControls {
+  align-items: center;
+  align-content: space-between;
+  justify-content: space-around;
+	top: 0;
+  width: 150px;
+  height: 250px;
   flex-direction: column;
 }
 
@@ -213,6 +237,19 @@ input[type=range]::-moz-range-track {
 
 .frameControlButtons > Button {
   margin: 0 10px;
+}
+
+.overlayControlButtons {
+  display: flex;
+  justify-content: space-evenly;
+  flex-direction: column;
+  height: -moz-available;
+  height: -webkit-fill-available;
+  height: fill-available;
+}
+
+.overlayControlButtons > Button {
+  width: 100px;
 }
 
 Button {

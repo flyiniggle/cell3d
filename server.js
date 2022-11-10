@@ -6,6 +6,8 @@ import Express from 'express';
 import Chalk from 'chalk';
 import serveFavicon from 'serve-favicon';
 import getTimeSeries from './lib/getTimeseries.js';
+import getAlignedSmallTimeSeries from './lib/getAlignedSmallTimeseries.js';
+import getAlignedFullTimeSeries from './lib/getAlignedFullTimeseries.js';
 import getBestTimeSeries from './lib/getBestTimeseries.js';
 
 
@@ -31,6 +33,10 @@ expressApp.use('/external', Express.static(path.join(__dirname, 'node_modules'))
 expressApp.use('/images', Express.static(path.join(__dirname, 'images')));
 expressApp.use('/ca', Express.static(path.join(__dirname, 'images', 'ca', 'derived')));
 expressApp.use('/best', Express.static(path.join(__dirname, 'images', 'ca', 'best')));
+expressApp.use('/aligned/small', Express.static(path.join(__dirname, 'images', 'ca', 'aligned', 'cell_split')));
+expressApp.use('/aligned/full', Express.static(path.join(__dirname, 'images', 'ca', 'aligned', 'full')));
+expressApp.get('/resources/timeseries/aligned/small', getAlignedSmallTimeSeries);
+expressApp.get('/resources/timeseries/aligned/full', getAlignedFullTimeSeries);
 expressApp.get('/resources/timeseries/:well/:segment', getTimeSeries);
 expressApp.get('/resources/timeseries/best', getBestTimeSeries);
 
