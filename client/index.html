@@ -18,29 +18,31 @@
       <div class="lds-grid"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
     </div>
     <div id="smallContainer" class="container">
-      <div class="controls frameControls">
-        <div class='frameControlButtons'>
-          <Button data-target='play'>play</Button>
-          <Button class="selected" data-target='pause'>pause</Button>
+      <div class="header">
+        <div class="controls frameControls">
+          <div class='frameControlButtons'>
+            <Button data-target='play'>play</Button>
+            <Button class="selected" data-target='pause'>pause</Button>
+          </div>
+          <div class="progressContainer">
+            <input type="range" min="0" step=".001" value="0" class="progress">
+          </div>
         </div>
-        <div class="progressContainer">
-          <input type="range" min="0" step=".001" value="0" class="progress">
+        <div class="controls viewControls">
+          <div class="label">View</div>
+          <div class='viewControlButtons'>
+            <Button disabled data-target='full'>Full</Button>
+            <Button class="selected" data-target='small'>Zoomed</Button>
+          </div>
         </div>
-      </div>
-      <div class="controls viewControls">
-        <div class="label">View</div>
-        <div class='viewControlButtons'>
-          <Button disabled data-target='full'>Full</Button>
-          <Button disabled class="selected" data-target='zoomed'>Zoomed</Button>
-        </div>
-      </div>
-      <div class="controls overlayControls">
-        <div class="label">Overlay</div>
-        <div class='overlayControlButtons'>
-          <Button class="selected" data-target='color'>color</Button>
-          <Button data-target='best'>best</Button>
-          <Button data-target='contour'>contour</Button>
-          <Button data-target='phi8'>base</Button>
+        <div class="controls overlayControls">
+          <div class="label">Overlay</div>
+          <div class='overlayControlButtons'>
+            <Button class="row1 selected" data-target='color'>color</Button>
+            <Button class="row1" data-target='best'>best</Button>
+            <Button class="row2" data-target='contour'>contour</Button>
+            <Button class="row2" data-target='phi8'>base</Button>
+          </div>
         </div>
       </div>
       <div id="timeSeriesViewerSmall" class="viewer" ></div>
@@ -58,8 +60,8 @@
       <div class="controls viewControls">
         <div class="label">View</div>
         <div class='viewControlButtons'>
-          <Button disabled class="selected" data-target='full'>Full</Button>
-          <Button disabled data-target='zoomed'>Zoomed</Button>
+          <Button class="selected" data-target='full'>Full</Button>
+          <Button disabled data-target='small'>Zoomed</Button>
         </div>
       </div>
       <div class="controls overlayControls">

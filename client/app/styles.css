@@ -107,12 +107,20 @@
   }
 }
 
+.header {
+  width: 100%;
+  position: absolute;
+  display: flex;
+  align-items: flex-start;
+  top: 0;
+  left: 0;
+}
+
 .controls {
   display: flex;
   align-items: center;
   align-content: space-between;
   justify-content: center;
-	position: absolute;
 	z-index: 2;
 	border-bottom: 1px solid rgba(255, 255, 255, .5);
 	background-color: rgba(0, 0, 0, .15);
@@ -135,11 +143,10 @@
 }
 
 .frameControls {
+  margin-right: auto;
   align-items: center;
   align-content: space-between;
   justify-content: center;
-	top: 0;
-	left: 0;
   width: 30vw;
 }
 
@@ -147,10 +154,6 @@
   align-items: center;
   align-content: space-between;
   justify-content: space-around;
-	top: 0;
-	right: 0;
-  width: 150px;
-  height: 250px;
   flex-direction: column;
 }
 
@@ -158,9 +161,6 @@
   align-items: center;
   align-content: space-between;
   justify-content: space-around;
-	top: 0;
-  width: 150px;
-  height: 250px;
   flex-direction: column;
 }
 
@@ -240,16 +240,30 @@ input[type=range]::-moz-range-track {
 }
 
 .overlayControlButtons {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto;
+  grid-template-areas:
+    'row1 row1'
+    'row2 row2';
+}
+
+.viewControlButtons {
   display: flex;
-  justify-content: space-evenly;
   flex-direction: column;
-  height: -moz-available;
-  height: -webkit-fill-available;
-  height: fill-available;
 }
 
 .overlayControlButtons > Button {
   width: 100px;
+}
+
+.overlayControlButtons > Button.row1 {
+  grid-area: 'row1';
+}
+
+.overlayControlButtons > Button.row1 {
+  grid-area: 'row1';
 }
 
 Button {
@@ -269,7 +283,16 @@ Button {
   display: none;
 }
 
+.viewControls Button.selected,
 .overlayControls Button.selected {
   color: rgb(55, 71, 79);
   background: white;
+}
+
+.viewControls Button:disabled {
+  opacity: .5;
+}
+
+.viewControls Button:first-child {
+  margin-bottom: 10px;
 }

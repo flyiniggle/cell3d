@@ -62,6 +62,8 @@ const setupContainer = ({
   const overlayControlButtonHandler = getToggleButtonHandler(container.querySelector('.overlayControlButtons'));
   const frameControlButtons = container.querySelectorAll('.frameControlButtons > Button');
   const overlayControlButtons = container.querySelectorAll('.overlayControlButtons > Button');
+  const showFullViewButtons = container.querySelectorAll('.viewControlButtons > Button[data-target="full"]');
+  const showSmallViewButtons = container.querySelectorAll('.viewControlButtons > Button[data-target="small"]');
   const progressBar = container.querySelector('.progress');
 
   frameControlButtons.forEach(b => {
@@ -73,6 +75,18 @@ const setupContainer = ({
     b.addEventListener('click', overlayControlButtonHandler);
     b.addEventListener('click', (e) => {
       controller.changeOverlay(e?.target?.dataset?.target ?? '');
+    });
+  });
+
+  showFullViewButtons.forEach(b => {
+    b.addEventListener('click', () => {
+      document.getElementById('fullContainer').dispatchEvent(invokeViewer);
+    });
+  });
+
+  showSmallViewButtons.forEach(b => {
+    b.addEventListener('click', () => {
+      document.getElementById('smallContainer').dispatchEvent(invokeViewer);
     });
   });
   
